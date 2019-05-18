@@ -36,7 +36,7 @@ DIGITALOCEAN_IMAGE pick your distribution image "doctl compute image list-distri
 export DIGITALOCEAN_ACCESS_TOKEN="your_token_id"; \
 export DIGITALOCEAN_SSH_KEY_FINGERPRINT="ssh-key-fingerprint"; \
 export DIGITALOCEAN_IMAGE="centos-7-x64"; \
-export DIGITALOCEAN_SIZE="1Gb" \
+export DIGITALOCEAN_SIZE="1Gb"; \
 export DIGITALOCEAN_REGION="nyc3"
 ```
 
