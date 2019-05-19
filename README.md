@@ -3,7 +3,7 @@
 #### Description:
 Create virtual machines using docker-machine with VirtualBox or Digital Ocean
 
-> Must have [VirtualBox](https://www.virtualbox.org) installed or a [Digital Ocean](https://www.digitalocean.com) account or a [Google Cloud Platform](https://cloud.google.com) account.  It wouldn't hurt to have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.
+> Must have [VirtualBox](https://www.virtualbox.org) installed or a [Digital Ocean](https://www.digitalocean.com) account or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.
 
 #### Create Virtual Machines:
 Argument must be 'virtualbox', 'do' or 'gce', second argument is number of machines to create (default 1).
