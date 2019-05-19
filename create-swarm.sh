@@ -75,10 +75,10 @@ if [ $1 == gce ]
 
     if [ "$GCE_MACHINES" -gt "1" ]
       then
-      JOIN_TOKEN=$(docker-machine ssh gcevm1 docker swarm join-token -q manager)
+      JOIN_TOKEN=$(docker-machine ssh gcevm1 sudo docker swarm join-token -q manager)
 
       for i in $(seq 2 $GCE_MACHINES); do
-        docker-machine ssh gcevm$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
+        docker-machine ssh gcevm$i sudo docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
       done
 
       exit 0
