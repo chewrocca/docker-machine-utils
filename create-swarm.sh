@@ -1,29 +1,40 @@
 #!/usr/bin/env bash
 set -e
 
-# Get number of machines
-MACHINES=$(docker-machine ls | grep \b | sed '/^$/d'| awk '{print NR}'| sort -nr| sed -n '1p')
-
-if [[ ! $1 =~ ^(virtualbox|do)$ ]]; then
+if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]]; then
   echo "Argument must be 'virtualbox' or 'do'."
   exit 1
 fi
 
+# Get number of machines
+echo "Getting number of machines..."
+GCE_MACHINES=$(docker-machine ls | grep gce | sed '/^$/d'| awk '{print NR}'| sort -nr| sed -n '1p')
+DO_MACHINES=$(docker-machine ls | grep dvc | sed '/^$/d'| awk '{print NR}'| sort -nr| sed -n '1p')
+VB_MACHINES=$(docker-machine ls | grep vb | sed '/^$/d'| awk '{print NR}'| sort -nr| sed -n '1p')
+
+sleep 3
+
 if [ $1 == virtualbox ]
   then
     echo "Creating VirtualBox swarm..."
-    LEADER_IP=$(docker-machine ssh vm1 ifconfig eth1 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}')
+    LEADER_IP=$(docker-machine ssh vbvm1 ifconfig eth1 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}')
 
     # create a swarm as all managers
-    docker-machine ssh vm1 docker swarm init --advertise-addr "$LEADER_IP"
+    docker-machine ssh vbvm1 docker swarm init --advertise-addr "$LEADER_IP"
 
-    JOIN_TOKEN=$(docker-machine ssh vm1 docker swarm join-token -q manager)
+    if [ "$VB_MACHINES" -gt "1" ]
+      then
+      JOIN_TOKEN=$(docker-machine ssh vbvm1 docker swarm join-token -q manager)
 
-    for i in $(seq 2 $MACHINES); do
-      docker-machine ssh vm$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
-    done
+      for i in $(seq 2 $VB_MACHINES); do
+        docker-machine ssh vbvm$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
+      done
 
-    docker-machine env vm1
+      exit 0
+
+    fi
+
+    docker-machine env vbvm1
 
     exit 0
 fi
@@ -32,24 +43,49 @@ if [ $1 == do ]
   then
     echo "Creating Digital Ocean swarm..."
     # since we created droplets with a private NIC on eth1, lets use that for swarm comms
-    LEADER_IP=$(docker-machine ssh dvc1 ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    LEADER_IP=$(docker-machine ssh dvcvm1 ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 
     # create a swarm as all managers
-    docker-machine ssh dvc1 docker swarm init --advertise-addr "$LEADER_IP"
+    docker-machine ssh dvcvm1 docker swarm init --advertise-addr "$LEADER_IP"
 
-    # note that if you use eth1 above (private network in digitalocean) it makes the below
-    # a bit tricky, because docker-machine lists the public IP's but we need the
-    # private IP of manager for join commands, so we can't simply envvar the token
-    # like lots of scripts do... we'd need to fist get private IP of first node
+    if [ "$DO_MACHINES" -gt "1" ]
+      then
+      JOIN_TOKEN=$(docker-machine ssh dvcvm1 docker swarm join-token -q manager)
 
-    # TODO: provide flexable numbers at cli for x managers and x workers
-    JOIN_TOKEN=$(docker-machine ssh dvc1 docker swarm join-token -q manager)
+      for i in $(seq 2 $DO_MACHINES); do
+        docker-machine ssh dvcvm$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
+      done
 
-    for i in $(seq 2 $MACHINES); do
-      docker-machine ssh dvc$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
-    done
+      exit 0
 
-    docker-machine env dvc1
+    fi
+
+    docker-machine env dvcvm1
+
+    exit 0
+fi
+
+if [ $1 == gce ]
+  then
+    echo "Creating Google Compute Engine swarm..."
+    LEADER_IP=$(gcloud compute instances describe gcevm1 --format='get(networkInterfaces[0].networkIP)')
+
+    # create a swarm as all managers
+    docker-machine ssh gcevm1 sudo docker swarm init --advertise-addr "$LEADER_IP"
+
+    if [ "$GCE_MACHINES" -gt "1" ]
+      then
+      JOIN_TOKEN=$(docker-machine ssh gcevm1 docker swarm join-token -q manager)
+
+      for i in $(seq 2 $GCE_MACHINES); do
+        docker-machine ssh gcevm$i docker swarm join --token "$JOIN_TOKEN" "$LEADER_IP":2377
+      done
+
+      exit 0
+
+     fi
+
+    docker-machine env gcevm1
 
     exit 0
 fi

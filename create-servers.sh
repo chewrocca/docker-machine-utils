@@ -2,7 +2,7 @@
 set -e
 END=$2
 
-if [[ ! $1 =~ ^(virtualbox|do)$ ]]; then
+if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]]; then
   echo "Argument must be 'virtualbox' or 'do', second argument is number of machines to create (default 1)."
   exit 1
 fi
@@ -14,7 +14,7 @@ if [ $1 == virtualbox ]
       docker-machine create \
       --driver=virtualbox \
       --virtualbox-memory 8096 \
-      vm${server}
+      vbvm${server}
     done
     exit 0
 fi
@@ -42,7 +42,30 @@ if [ $1 == do ]
       --digitalocean-image="${DIGITALOCEAN_IMAGE}" \
       --digitalocean-tags="docker-machine" \
       --digitalocean-private-networking=true \
-       dvc${server}
+      dvcvm${server}
+    done
+    exit 0
+fi
+
+if [ $1 == gce ]
+  then
+    echo "Creating Google Compute Engine machines..."
+
+    # GOOGLE_APPLICATION_CREDENTIALS=$HOME/gce-credentials.json
+    # GOOGLE_PROJECT_ID "gcloud projects list"
+    # GOOGLE_ZONE "gcloud compute zones list"
+    # GOOGLE_MACHINE_SIZE "gcloud compute machine-types list"
+    # GOOGLE_MACHINE_IMAGE "gcloud compute images list --uri"
+    # The absolute URL to a base VM image to instantiate
+
+    for server in $(seq 1 $END); do
+      docker-machine create \
+      --driver=google \
+      --google-project ${GOOGLE_PROJECT_ID} \
+      --google-zone ${GOOGLE_ZONE} \
+      --google-machine-type ${GOOGLE_MACHINE_SIZE} \
+      --google-machine-image ${GOOGLE_MACHINE_IMAGE} \
+      gcevm${server}
     done
     exit 0
 fi

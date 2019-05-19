@@ -1,12 +1,12 @@
-# docker-machine-utils
+# Docker Machine Scripts
 
 #### Description:
-Create virtual machines using docker-machine with VirtualBox or Digital Ocean 
+Create virtual machines using docker-machine with VirtualBox or Digital Ocean
 
-> Must have [VirtualBox](https://www.virtualbox.org) installed or a [Digital Ocean](https://www.digitalocean.com) account.  It wouldn't hurt to have doctl installed if you're using Digital Ocean.  
+> Must have [VirtualBox](https://www.virtualbox.org) installed or a [Digital Ocean](https://www.digitalocean.com) account or a [Google Cloud Platform](https://cloud.google.com) account.  It wouldn't hurt to have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.
 
 #### Create Virtual Machines:
-Argument must be 'virtualbox' or 'do', second argument is number of machines to create (default 1).
+Argument must be 'virtualbox', 'do' or 'gce', second argument is number of machines to create (default 1).
 
 example:
 
@@ -38,5 +38,25 @@ export DIGITALOCEAN_SSH_KEY_FINGERPRINT="ssh-key-fingerprint"; \
 export DIGITALOCEAN_IMAGE="centos-7-x64"; \
 export DIGITALOCEAN_SIZE="1Gb"; \
 export DIGITALOCEAN_REGION="nyc3"
+```
+
+##### Google Cloud Platform Variables:
+
+<pre>
+GOOGLE_APPLICATION_CREDENTIALS=$HOME/gce-credentials.json
+GOOGLE_PROJECT_ID "gcloud projects list"
+GOOGLE_ZONE "gcloud compute zones list"
+GOOGLE_MACHINE_SIZE "gcloud compute machine-types list"
+GOOGLE_MACHINE_IMAGE "gcloud compute images list --uri"
+The absolute URL to a base VM image to instantiate
+</pre>
+
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/gce-crendentials.json" ; \
+export GOOGLE_PROJECT_ID="your-project-id" ; \
+export GOOGLE_ZONE="us-east1-b" ; \
+export GOOGLE_MACHINE_SIZE="g1-small" ; \
+export GOOGLE_MACHINE_IMAGE="https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20190515" 
 ```
 
