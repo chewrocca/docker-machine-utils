@@ -43,7 +43,7 @@ if [ $1 == do ]; then
       --digitalocean-image="${DIGITALOCEAN_IMAGE}" \
       --digitalocean-tags="docker-machine" \
       --digitalocean-private-networking=true \
-      dvcvm${server}
+      dovm${server}
     done
     exit 0
 fi

@@ -8,9 +8,9 @@ fi
 
 # Get number of machines
 echo "Getting number of machines..."
-GCE_MACHINES=$(docker-machine ls | grep -c gce) 
-DO_MACHINES=$(docker-machine ls | grep -c dvc)
-VB_MACHINES=$(docker-machine ls | grep -c vb) 
+GCE_MACHINES=$(docker-machine ls | grep -c gce)
+DO_MACHINES=$(docker-machine ls | grep -c do)
+VB_MACHINES=$(docker-machine ls | grep -c vb)
 
 if [ $1 == virtualbox ]; then
     echo "Creating VirtualBox swarm..."
@@ -38,24 +38,24 @@ fi
 if [ $1 == do ]; then
     echo "Creating Digital Ocean swarm..."
     # created droplets with a private NIC on eth1
-    LEADER_IP=$(docker-machine ssh dvcvm1 ip addr show eth1 | grep "inet\b" | \
+    LEADER_IP=$(docker-machine ssh dovm1 ip addr show eth1 | grep "inet\b" | \
                 awk '{print $2}' | cut -d/ -f1)
 
     # create a swarm as all managers
-    docker-machine ssh dvcvm1 docker swarm init --advertise-addr "$LEADER_IP"
+    docker-machine ssh dovm1 docker swarm init --advertise-addr "$LEADER_IP"
 
     if [ "$DO_MACHINES" -gt "1" ]; then
-      JOIN_TOKEN=$(docker-machine ssh dvcvm1 docker swarm join-token -q manager)
+      JOIN_TOKEN=$(docker-machine ssh dovm1 docker swarm join-token -q manager)
 
       for i in $(seq 2 $DO_MACHINES); do
-        echo "dvcvm$i:"
-        docker-machine ssh dvcvm$i docker swarm join --token "$JOIN_TOKEN" \
+        echo "dovm$i:"
+        docker-machine ssh dovm$i docker swarm join --token "$JOIN_TOKEN" \
         "$LEADER_IP":2377
       done
       exit 0
     fi
 
-    docker-machine env dvcvm1
+    docker-machine env dovm1
     exit 0
 fi
 
