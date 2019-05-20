@@ -12,13 +12,50 @@ example:
 
 `./create-servers.sh virtualbox 3`
 
-#### Join Swarm with all managers
+#### Join Swarm with all managers:
 
 `./create-swarm.sh virtualbox manager`
 
-#### Join Swarm with workers
+#### Join Swarm with workers:
 
 `./create-swarm.sh virtual worker`
+
+##### example output:
+```plain
+Getting number of machines...
+Creating VirtualBox swarm...
+Swarm initialized: current node (ipx2hi38ka8lj5ew9mqm7dea8) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-5qu1bvjtlgwdszz0c4iuloqku3uj2sfa1h2df8p1zcfi631a1s-673n9kovdqm70ztzubi6003yu 192.168.99.140:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+Adding worker nodes...
+vbvm2:
+This node joined a swarm as a worker.
+vbvm3:
+This node joined a swarm as a worker.
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.140:2376"
+export DOCKER_CERT_PATH="/Users/mfine/.docker/machine/machines/vbvm1"
+export DOCKER_MACHINE_NAME="vbvm1"
+# Run this command to configure your shell:
+# eval $(docker-machine env vbvm1)
+```
+
+Run `eval $(docker-machine env vbvm1)`
+
+Now docker commands in the shell execute on the vm.
+  
+```plain
+$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+ipx2hi38ka8lj5ew9mqm7dea8 *   vbvm1               Ready               Active              Leader              18.09.6
+nkipwypogtonly62pp2187olo     vbvm2               Ready               Active                                  18.09.6
+7y4mkg2k649v6zqgdnh6fkad6     vbvm3               Ready               Active                                  18.09.6
+```
 
 #### Delete Virtual Machines:
 
