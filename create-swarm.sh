@@ -8,12 +8,9 @@ fi
 
 # Get number of machines
 echo "Getting number of machines..."
-GCE_MACHINES=$(docker-machine ls | grep gce | sed '/^$/d'| awk '{print NR}'| \
-               sort -nr| sed -n '1p')
-DO_MACHINES=$(docker-machine ls | grep dvc | sed '/^$/d'| awk '{print NR}'| \
-              sort -nr| sed -n '1p')
-VB_MACHINES=$(docker-machine ls | grep vb | sed '/^$/d'| awk '{print NR}'| \
-              sort -nr| sed -n '1p')
+GCE_MACHINES=$(docker-machine ls | grep -c gce) 
+DO_MACHINES=$(docker-machine ls | grep -c dvc)
+VB_MACHINES=$(docker-machine ls | grep -c vb) 
 
 if [ $1 == virtualbox ]; then
     echo "Creating VirtualBox swarm..."
