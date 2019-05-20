@@ -13,12 +13,10 @@ if [ $1 == virtualbox ]
     for server in $(seq 1 $END); do
       docker-machine create \
       --driver=virtualbox \
-      --virtualbox-memory 8096 \
       vbvm${server}
     done
     exit 0
 fi
-
 
 if [ $1 == do ]
   then
