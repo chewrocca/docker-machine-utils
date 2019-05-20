@@ -6,13 +6,10 @@ if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]]; then
   exit 1
 fi
 
-# Get number of machines
-echo "Getting number of machines..."
-GCE_MACHINES=$(docker-machine ls | grep -c gce)
-DO_MACHINES=$(docker-machine ls | grep -c do)
-VB_MACHINES=$(docker-machine ls | grep -c vb)
-
 if [ $1 == virtualbox ]; then
+    echo "Getting number of machines..."
+    VB_MACHINES=$(docker-machine ls | grep -c vb)
+
     echo "Creating VirtualBox swarm..."
     LEADER_IP=$(docker-machine ssh vbvm1 ifconfig eth1 | grep 'inet addr' | \
                 cut -d: -f2 | awk '{print $1}')
@@ -28,7 +25,6 @@ if [ $1 == virtualbox ]; then
         docker-machine ssh vbvm$i docker swarm join --token "$JOIN_TOKEN" \
         "$LEADER_IP":2377
       done
-      exit 0
     fi
 
     docker-machine env vbvm1
@@ -36,6 +32,9 @@ if [ $1 == virtualbox ]; then
 fi
 
 if [ $1 == do ]; then
+    echo "Getting number of machines..."
+    DO_MACHINES=$(docker-machine ls | grep -c do)
+
     echo "Creating Digital Ocean swarm..."
     # created droplets with a private NIC on eth1
     LEADER_IP=$(docker-machine ssh dovm1 ip addr show eth1 | grep "inet\b" | \
@@ -52,7 +51,6 @@ if [ $1 == do ]; then
         docker-machine ssh dovm$i docker swarm join --token "$JOIN_TOKEN" \
         "$LEADER_IP":2377
       done
-      exit 0
     fi
 
     docker-machine env dovm1
@@ -60,6 +58,9 @@ if [ $1 == do ]; then
 fi
 
 if [ $1 == gce ]; then
+    echo "Getting number of machines..."
+    GCE_MACHINES=$(docker-machine ls | grep -c gce)
+
     echo "Creating Google Compute Engine swarm..."
     LEADER_IP=$(gcloud compute instances describe gcevm1 \
                 --format='get(networkInterfaces[0].networkIP)')
@@ -77,7 +78,6 @@ if [ $1 == gce ]; then
         docker-machine ssh gcevm$i sudo docker swarm join --token \
         "$JOIN_TOKEN" "$LEADER_IP":2377
       done
-      exit 0
      fi
 
     docker-machine env gcevm1
