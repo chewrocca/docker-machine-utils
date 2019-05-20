@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]]; then
-  echo "Argument must be 'virtualbox', 'do' or 'gce'."
+if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]] && [[ ! $2 =~ ^(manager|worker)$ ]]; then
+  echo "Argument must be 'virtualbox', 'do' or 'gce', 'manager' or 'worker' as second argument."
   exit 1
 fi
 
-if [ $1 == virtualbox ]; then
+if [ $1 == virtualbox ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
     VB_MACHINES=$(docker-machine ls | grep -c vb)
 
@@ -17,8 +17,20 @@ if [ $1 == virtualbox ]; then
     # create a swarm as all managers
     docker-machine ssh vbvm1 docker swarm init --advertise-addr "$LEADER_IP"
 
-    if [ "$VB_MACHINES" -gt "1" ]; then
+    if [ "$VB_MACHINES" -gt "1" -a $2 == manager ]; then
+      echo "Adding manager nodes..."
       JOIN_TOKEN=$(docker-machine ssh vbvm1 docker swarm join-token -q manager)
+
+      for i in $(seq 2 $VB_MACHINES); do
+        echo "vbvm$i:"
+        docker-machine ssh vbvm$i docker swarm join --token "$JOIN_TOKEN" \
+        "$LEADER_IP":2377
+      done
+    fi
+
+    if [ "$VB_MACHINES" -gt "1" -a $2 == worker ]; then
+      echo "Adding worker nodes..."
+      JOIN_TOKEN=$(docker-machine ssh vbvm1 docker swarm join-token -q worker)
 
       for i in $(seq 2 $VB_MACHINES); do
         echo "vbvm$i:"
@@ -31,7 +43,7 @@ if [ $1 == virtualbox ]; then
     exit 0
 fi
 
-if [ $1 == do ]; then
+if [ $1 == do ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
     DO_MACHINES=$(docker-machine ls | grep -c do)
 
@@ -43,8 +55,20 @@ if [ $1 == do ]; then
     # create a swarm as all managers
     docker-machine ssh dovm1 docker swarm init --advertise-addr "$LEADER_IP"
 
-    if [ "$DO_MACHINES" -gt "1" ]; then
+    if [ "$DO_MACHINES" -gt "1" -a $2 == manager ]; then
+      echo "Adding manager nodes..."
       JOIN_TOKEN=$(docker-machine ssh dovm1 docker swarm join-token -q manager)
+
+      for i in $(seq 2 $DO_MACHINES); do
+        echo "dovm$i:"
+        docker-machine ssh dovm$i docker swarm join --token "$JOIN_TOKEN" \
+        "$LEADER_IP":2377
+      done
+    fi
+
+    if [ "$DO_MACHINES" -gt "1" -a $2 == worker ]; then
+      echo "Adding worker nodes..."
+      JOIN_TOKEN=$(docker-machine ssh dovm1 docker swarm join-token -q worker)
 
       for i in $(seq 2 $DO_MACHINES); do
         echo "dovm$i:"
@@ -57,7 +81,7 @@ if [ $1 == do ]; then
     exit 0
 fi
 
-if [ $1 == gce ]; then
+if [ $1 == gce ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
     GCE_MACHINES=$(docker-machine ls | grep -c gce)
 
@@ -69,7 +93,8 @@ if [ $1 == gce ]; then
     docker-machine ssh gcevm1 sudo docker swarm init --advertise-addr \
     "$LEADER_IP"
 
-    if [ "$GCE_MACHINES" -gt "1" ]; then
+    if [ "$GCE_MACHINES" -gt "1" -a $2 == manager ]; then
+      echo "Adding manager nodes..."
       JOIN_TOKEN=$(docker-machine ssh gcevm1 sudo docker swarm join-token -q \
                    manager)
 
@@ -78,8 +103,22 @@ if [ $1 == gce ]; then
         docker-machine ssh gcevm$i sudo docker swarm join --token \
         "$JOIN_TOKEN" "$LEADER_IP":2377
       done
-     fi
+    fi
+
+    if [ "$GCE_MACHINES" -gt "1" -a $2 == worker ]; then
+      echo "Adding worker nodes..."
+      JOIN_TOKEN=$(docker-machine ssh gcevm1 sudo docker swarm join-token -q worker)
+
+      for i in $(seq 2 $GCE_MACHINES); do
+        echo "gcevm$i:"
+        docker-machine ssh gcevm$i docker swarm join --token "$JOIN_TOKEN" \
+        "$LEADER_IP":2377
+      done
+    fi
 
     docker-machine env gcevm1
     exit 0
 fi
+
+echo "Argument must be 'virtualbox', 'do' or 'gce', 'manager' or 'worker' as second argument."
+exit 1
