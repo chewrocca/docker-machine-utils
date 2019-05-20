@@ -9,11 +9,11 @@ fi
 # Get number of machines
 echo "Getting number of machines..."
 GCE_MACHINES=$(docker-machine ls | grep gce | sed '/^$/d'| awk '{print NR}'| \
-sort -nr| sed -n '1p')
+               sort -nr| sed -n '1p')
 DO_MACHINES=$(docker-machine ls | grep dvc | sed '/^$/d'| awk '{print NR}'| \
-sort -nr| sed -n '1p')
+              sort -nr| sed -n '1p')
 VB_MACHINES=$(docker-machine ls | grep vb | sed '/^$/d'| awk '{print NR}'| \
-sort -nr| sed -n '1p')
+              sort -nr| sed -n '1p')
 
 if [ $1 == virtualbox ]; then
     echo "Deleting VirtualBox machines..."
