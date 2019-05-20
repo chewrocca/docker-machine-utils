@@ -8,7 +8,7 @@ fi
 
 if [ $1 == virtualbox ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
-    VB_MACHINES=$(docker-machine ls | grep -c vb)
+    VB_MACHINES=$(docker-machine ls -q | grep -c vb)
 
     echo "Creating VirtualBox swarm..."
     LEADER_IP=$(docker-machine ssh vbvm1 ifconfig eth1 | grep 'inet addr' | \
@@ -45,7 +45,7 @@ fi
 
 if [ $1 == do ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
-    DO_MACHINES=$(docker-machine ls | grep -c do)
+    DO_MACHINES=$(docker-machine ls -q | grep -c do)
 
     echo "Creating Digital Ocean swarm..."
     # created droplets with a private NIC on eth1
@@ -83,7 +83,7 @@ fi
 
 if [ $1 == gce ] && [[ $2 =~ ^(manager|worker)$ ]]; then
     echo "Getting number of machines..."
-    GCE_MACHINES=$(docker-machine ls | grep -c gce)
+    GCE_MACHINES=$(docker-machine ls -q | grep -c gce)
 
     echo "Creating Google Compute Engine swarm..."
     LEADER_IP=$(gcloud compute instances describe gcevm1 \
