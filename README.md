@@ -39,7 +39,7 @@ vbvm3:
 This node joined a swarm as a worker.
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://192.168.99.140:2376"
-export DOCKER_CERT_PATH="/Users/mfine/.docker/machine/machines/vbvm1"
+export DOCKER_CERT_PATH="$HOME/.docker/machine/machines/vbvm1"
 export DOCKER_MACHINE_NAME="vbvm1"
 # Run this command to configure your shell:
 # eval $(docker-machine env vbvm1)
