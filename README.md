@@ -116,3 +116,8 @@ vpc_id = your_vpc_id
 ```
 
 `--amazonec2-open-port 2377` is added to `create-servers.sh` allow Docker Swarm to work with AWS.
+
+
+##### Docker Machine Driver Information and Defaults:
+
+[Docker Driver Information and Defaults](https://docs.docker.com/machine/drivers/)
