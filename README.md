@@ -16,9 +16,9 @@ example:
 
 `./create-swarm.sh virtualbox manager`
 
-#### Join Swarm with workers:
+#### Join Swarm with one manager and the rest of the VMs as workers:
 
-`./create-swarm.sh virtual worker`
+`./create-swarm.sh virtualbox worker`
 
 ##### example output:
 ```plain
