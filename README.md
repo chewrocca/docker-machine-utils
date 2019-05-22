@@ -1,7 +1,7 @@
 # Docker Machine Scripts
 
 #### Description:
-Create virtual machines using docker-machine with VirtualBox or Digital Ocean
+Create virtual machines using docker-machine with AWS, Digital Ocean, GCP, or VirtualBox. Add nodes as managers or workers to Swarm. Delete servers when you’re done. 
 
 > Must have [VirtualBox](https://www.virtualbox.org) installed or an [AWS](https://aws.amazone.com), a [Digital Ocean](https://www.digitalocean.com) account, or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.  If you're using AWS having `aws cli` could be beneficial. 
 
