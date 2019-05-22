@@ -4,18 +4,21 @@ set -e
 # Use second argument to get number of Virtual Machines to build (default 1)
 END=$2
 
-if [[ ! $1 =~ ^(virtualbox|do|gce)$ ]]; then
-  echo "Argument must be 'virtualbox', 'do' or 'gce', second argument is" \
+if [[ ! $1 =~ ^(aws|do|gce|virtualbox)$ ]]; then
+  echo "Argument must be 'aws','do','gce', or 'virtualbox', second argument is" \
 "number of machines to create (defaults to 1)."
   exit 1
 fi
 
-if [ $1 == virtualbox ]; then
-    echo "Creating VirtualBox machines..."
+if [ $1 == aws ]; then
+    echo "Creating Amazon Web Services EC2 machines..."
+    # aws credentials are in ~/.aws/credentials
+    # opening port 2377 for docker swarm to work
     for server in $(seq 1 $END); do
       docker-machine create \
-      --driver=virtualbox \
-      vbvm${server}
+      --driver=amazonec2 \
+      --amazonec2-open-port 2377 \
+      awsvm${server}
     done
     exit 0
 fi
@@ -69,3 +72,15 @@ if [ $1 == gce ]; then
     done
     exit 0
 fi
+
+
+if [ $1 == virtualbox ]; then
+    echo "Creating VirtualBox machines..."
+    for server in $(seq 1 $END); do
+      docker-machine create \
+      --driver=virtualbox \
+      vbvm${server}
+    done
+    exit 0
+fi
+
