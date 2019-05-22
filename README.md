@@ -3,7 +3,7 @@
 #### Description:
 Create virtual machines using docker-machine with VirtualBox or Digital Ocean
 
-> Must have [VirtualBox](https://www.virtualbox.org) installed or a [Digital Ocean](https://www.digitalocean.com) account or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.
+> Must have [VirtualBox](https://www.virtualbox.org) installed or an [AWS](https://aws.amazone.com), a [Digital Ocean](https://www.digitalocean.com) account, or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.  If you're using AWS having `aws cli` could be beneficial. 
 
 #### Create Virtual Machines:
 Argument must be 'virtualbox', 'do' or 'gce', second argument is number of machines to create (defaults to 1 vm).
@@ -101,3 +101,18 @@ export GOOGLE_MACHINE_SIZE="g1-small" ; \
 export GOOGLE_MACHINE_IMAGE="https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20190515" 
 ```
 
+##### AWS EC2:
+
+Create a populated ~/.aws/credentials file.
+
+example:
+
+```plain
+[default]
+aws_access_key_id = your_access_key
+aws_secret_access_key = your_secret_access_key
+region=us-east-1
+vpc_id = your_vpc_id
+```
+
+`--amazonec2-open-port 2377` is added to `create-servers.sh` allow Docker Swarm to work with AWS.
