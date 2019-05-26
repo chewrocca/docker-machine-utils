@@ -61,7 +61,6 @@ nkipwypogtonly62pp2187olo     vbvm2               Ready               Active    
 
 `./delete-servers.sh virtualbox`
 
-
 ##### Digital Ocean Environmental Variables:
 
 <pre>
@@ -71,7 +70,6 @@ DIGITALOCEAN_SSH_KEY_FINGERPRINT in the format of "8d:30:8a..." with a comand li
 DIGITALOCEAN_REGION pick your region from "doctl compute region list"
 DIGITALOCEAN_IMAGE pick your distribution image "doctl compute image list-distribution"
 </pre>
-
 
 ```bash
 export DIGITALOCEAN_ACCESS_TOKEN="your_token_id"; \
@@ -91,7 +89,6 @@ GOOGLE_MACHINE_SIZE "gcloud compute machine-types list"
 GOOGLE_MACHINE_IMAGE "gcloud compute images list --uri"
 The absolute URL to a base VM image to instantiate
 </pre>
-
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/gce-crendentials.json" ; \
@@ -116,7 +113,6 @@ vpc_id = your_vpc_id
 ```
 
 `--amazonec2-open-port 2377` is added to `create-servers.sh` allow Docker Swarm to work with AWS.
-
 
 ##### Docker Machine Driver Information and Defaults:
 

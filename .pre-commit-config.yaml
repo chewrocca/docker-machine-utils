@@ -12,13 +12,6 @@ repos:
       args:
       - --autofix
 
--   repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 1.11.0
-    hooks:
-    - id: markdownlint
-    - id: shellcheck
-    - id: shfmt
-
 -   repo: https://github.com/fortman/pre-commit-prometheus
     rev: v1.1.1
     hooks:
