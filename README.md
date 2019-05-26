@@ -1,9 +1,9 @@
 # Docker Machine Scripts
 
 #### Description:
-Create virtual machines using docker-machine with AWS, Digital Ocean, GCP, or VirtualBox. Add nodes as managers or workers to Swarm. Delete servers when you’re done. 
+Create virtual machines using docker-machine with AWS, Digital Ocean, GCP, or VirtualBox. Add nodes as managers or workers to Swarm. Delete servers when you’re done.
 
-> Must have [VirtualBox](https://www.virtualbox.org) installed or an [AWS](https://aws.amazone.com), a [Digital Ocean](https://www.digitalocean.com) account, or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.  If you're using AWS having `aws cli` could be beneficial. 
+> Must have [VirtualBox](https://www.virtualbox.org) installed or an [AWS](https://aws.amazone.com), a [Digital Ocean](https://www.digitalocean.com) account, or a [Google Cloud Platform](https://cloud.google.com) account.  You must have `doctl` installed if you're using Digital Ocean or `gcloud` for for Google Cloud Platform.  If you're using AWS having `aws cli` could be beneficial.
 
 #### Create Virtual Machines:
 Argument must be 'virtualbox', 'do' or 'gce', second argument is number of machines to create (defaults to 1 vm).
@@ -48,7 +48,7 @@ export DOCKER_MACHINE_NAME="vbvm1"
 Run `eval $(docker-machine env vbvm1)`
 
 Now docker commands in the shell execute on the vm.
-  
+
 ```plain
 $ docker node ls
 ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
@@ -98,7 +98,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="$HOME/gce-crendentials.json" ; \
 export GOOGLE_PROJECT_ID="your-project-id" ; \
 export GOOGLE_ZONE="us-east1-b" ; \
 export GOOGLE_MACHINE_SIZE="g1-small" ; \
-export GOOGLE_MACHINE_IMAGE="https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20190515" 
+export GOOGLE_MACHINE_IMAGE="https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20190515"
 ```
 
 ##### AWS EC2:
