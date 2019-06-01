@@ -113,7 +113,7 @@ if [ $1 == gce ] && [[ $2 =~ ^(manager|worker)$ ]]; then
 
       for i in $(seq 2 $GCE_MACHINES); do
         echo "gcevm$i:"
-        docker-machine ssh gcevm$i docker swarm join --token "$JOIN_TOKEN" \
+        docker-machine ssh gcevm$i sudo docker swarm join --token "$JOIN_TOKEN" \
         "$LEADER_IP":2377
       done
     fi
