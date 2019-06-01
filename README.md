@@ -21,7 +21,7 @@ example:
 `./create-swarm.sh virtualbox worker`
 
 ##### example output:
-```plain
+```console
 Getting number of machines...
 Creating VirtualBox swarm...
 Swarm initialized: current node (ipx2hi38ka8lj5ew9mqm7dea8) is now a manager.
@@ -49,7 +49,7 @@ Run `eval $(docker-machine env vbvm1)`
 
 Now docker commands in the shell execute on the vm.
 
-```plain
+```console
 $ docker node ls
 ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
 ipx2hi38ka8lj5ew9mqm7dea8 *   vbvm1               Ready               Active              Leader              18.09.6
